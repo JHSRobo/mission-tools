@@ -40,13 +40,16 @@ class ShapeDetector:
 
 			# a square will have an aspect ratio that is approximately
 			# equal to one, otherwise, the shape is a rectangle
-			shape = "square" if ar >= 0.95 and ar <= 1.05 else "rectangle"
-			s3 = s3 + 1
+			if ar >= 0.95 and ar <= 1.05:
+				shape = "square"
+				s4 = s4 + 1
+			else:
+				shape = "rectangle"
+				s3 = s3 + 1
 
 		# if the shape is a pentagon, it will have 5 vertices
 		elif len(approx) == 5:
 			shape = "pentagon"
-			s4 = s4 + 1
 
 		# otherwise, we assume the shape is a circle
 		else:

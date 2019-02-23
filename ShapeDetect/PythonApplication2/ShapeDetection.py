@@ -12,7 +12,7 @@ import numpy as np
 
 # load the image and resize it to a smaller factor so that
 
-image = cv2.imread("benthic.png")
+image = cv2.imread("benthiccrop.jpg")
 resized = imutils.resize(image, width=536)
 ratio = image.shape[0] / float(resized.shape[0])
 
@@ -22,7 +22,9 @@ gray = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
 blurred = cv2.GaussianBlur(gray, (5, 5), 0)
 lower = np.array([0, 0, 0])
 upper = np.array([60, 60, 60])
-thresh = cv2.inRange(image, lower, upper)
+ret, thresh = cv2.threshold(blurred, 127, 255, cv2.THRESH_BINARY_INV)
+cv2.imshow("thresh", thresh)
+cv2.waitKey(0)
 # find contours in the thresholded image and initialize the
 # shape detector
 cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
