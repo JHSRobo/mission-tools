@@ -8,13 +8,26 @@ import argparse
 import imutils
 import cv2
 import numpy as np
+import time
 
 
 # load the image and resize it to a smaller factor so that
-
-image = cv2.imread("benthiccrop.jpg")
-resized = imutils.resize(image, width=536)
-ratio = image.shape[0] / float(resized.shape[0])
+cap = cv2.VideoCapture(0)
+i=0
+while(True):
+    # Capture frame-by-frame
+	ret, frame = cap.read()
+	cv2.rectangle(frame, (110,400), (510,100), (255,255,255), 3)
+	cv2.imshow('frame',frame)
+	if cv2.waitKey(1) & 0xFF == ord('q'):
+		break
+y=110
+x=120
+h=285
+w=380
+crop = frame[y:y+h, x:x+w]
+resized = imutils.resize(crop, width=520)
+ratio = crop.shape[0] / float(resized.shape[0])
 
 # convert the resized image to grayscale, blur it slightly,
 # and threshold it
@@ -22,7 +35,7 @@ gray = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
 blurred = cv2.GaussianBlur(gray, (5, 5), 0)
 lower = np.array([0, 0, 0])
 upper = np.array([60, 60, 60])
-ret, thresh = cv2.threshold(blurred, 127, 255, cv2.THRESH_BINARY_INV)
+ret, thresh = cv2.threshold(blurred, 60, 255, cv2.THRESH_BINARY_INV)
 cv2.imshow("thresh", thresh)
 cv2.waitKey(0)
 # find contours in the thresholded image and initialize the
@@ -46,9 +59,9 @@ for c in cnts:
 	c = c.astype("float")
 	c *= ratio
 	c = c.astype("int")
-	cv2.drawContours(image, [c], -1, (0, 255, 0), 2)
-	cv2.putText(image, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX,
+	cv2.drawContours(crop, [c], -1, (0, 255, 0), 2)
+	cv2.putText(crop, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX,
 		0.5, (100, 100, 100), 2)
 	# show the output image
-cv2.imshow("Image", image)
+cv2.imshow("Image", crop)
 cv2.waitKey(0)

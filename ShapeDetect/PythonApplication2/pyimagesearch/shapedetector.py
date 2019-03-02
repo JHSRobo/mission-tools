@@ -23,10 +23,10 @@ class ShapeDetector:
 		approx = cv2.approxPolyDP(c, 0.04 * peri, True)
 
 		# if the shape is a triangle, it will have 3 vertices
-		if len(approx) == 2:
-			shape = "line"
-			s1 = s1 + 1
-		elif len(approx) == 3:
+		##if len(approx) == 2:
+		##	shape = "line"
+		##	s1 = s1 + 1
+		if len(approx) == 3:
 			shape = "triangle"
 			s2 = s2 + 1
 
@@ -40,16 +40,16 @@ class ShapeDetector:
 
 			# a square will have an aspect ratio that is approximately
 			# equal to one, otherwise, the shape is a rectangle
-			if ar >= 0.95 and ar <= 1.05:
+			if ar >= 0.55 and ar <= 1.55:
 				shape = "square"
-				s4 = s4 + 1
+				s3 = s3 + 1
 			else:
 				shape = "rectangle"
-				s3 = s3 + 1
+				s4 = s4 + 1
 
 		# if the shape is a pentagon, it will have 5 vertices
-		elif len(approx) == 5:
-			shape = "pentagon"
+		##elif len(approx) == 5:
+			##shape = "pentagon"
 
 		# otherwise, we assume the shape is a circle
 		else:
@@ -57,5 +57,5 @@ class ShapeDetector:
 			s5 = s5 + 1
 
 		# return the name of the shape
-		print(s1, s2, s3, s4, s5)
+		print("lines", s1, "triangles", s2, "Squares", s3, "rectangles", s4, "circles", s5)
 		return shape
