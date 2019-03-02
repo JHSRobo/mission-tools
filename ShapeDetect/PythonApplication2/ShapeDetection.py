@@ -11,7 +11,7 @@ import numpy as np
 import time
 
 
-# load the image and resize it to a smaller factor so that
+# load the image/video
 cap = cv2.VideoCapture(0)
 i=0
 while(True):
@@ -21,6 +21,7 @@ while(True):
 	cv2.imshow('frame',frame)
 	if cv2.waitKey(1) & 0xFF == ord('q'):
 		break
+# crop image to fit frame and resize it for better processing!
 y=110
 x=120
 h=285
