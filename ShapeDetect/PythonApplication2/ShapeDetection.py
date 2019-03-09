@@ -1,3 +1,4 @@
+#!/usr/bin/env/
 # USAGE
 # python detect_shapes.py --image shapes_and_colors.png
 

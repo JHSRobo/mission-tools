@@ -5,7 +5,7 @@ import numpy as np
 
 class ShapeDetector:
 	def __init__(self):
-		self.s1, self.s2, self.s3, self.s4, self.s5 = 0
+		self.s1 = self.s2 = self.s3 = self.s4 = self.s5 = 0
 		pass
 
 	def detect(self, c):
@@ -20,7 +20,7 @@ class ShapeDetector:
 		# s1 = s1 + 1
 		if len(approx) == 3:
 			shape = "triangle"
-			s2 = s2 + 1
+			self.s2 = self.s2 + 1
 
 		# if the shape has 4 vertices, it is either a square or
 		# a rectangle
@@ -34,10 +34,10 @@ class ShapeDetector:
 			# equal to one, otherwise, the shape is a rectangle
 			if 0.75 <= ar <= 1.35:
 				shape = "square"
-				s3 = s3 + 1
+				self.s3 = self.s3 + 1
 			else:
 				shape = "rectangle"
-				s4 = s4 + 1
+				self.s4 = self.s4 + 1
 
 		# if the shape is a pentagon, it will have 5 vertices
 		# elif len(approx) == 5:
@@ -57,12 +57,21 @@ class ShapeDetector:
 		c5 = str(self.s5)
 		blackdrop = np.zeros((1024, 512, 3), np.uint8)
 		font = cv2.FONT_HERSHEY_SIMPLEX
-		cv2.putText(blackdrop, c2, (10, 120), font, 4, (255, 255, 255), 2, cv2.LINE_AA)
-		cv2.putText(blackdrop, c3, (10,230), font, 4, (255, 255, 255), 2, cv2.LINE_AA)
-		cv2.rectangle(blackdrop, (125, 155), (195, 225), (0, 255, 0), -1)
-		cv2.putText(blackdrop, c4, (10, 340), font, 4, (255, 255, 255), 2, cv2.LINE_AA)
-		cv2.rectangle(blackdrop, (155, 265), (165, 335), (255, 255, 0), -1)
-		cv2.putText(blackdrop, c5, (10, 450), font, 4, (255, 255, 255), 2, cv2.LINE_AA)
-		cv2.circle(blackdrop, (160, 410), 40, (0, 0, 255), -1)
+		cv2.putText(blackdrop,c2,(10,120), font, 4,(255,255,255),2,cv2.LINE_AA)
+		cv2.putText(blackdrop,c3,(10,230), font, 4,(255,255,255),2,cv2.LINE_AA)
+		p1 = (155, 40)
+		p2 = (120, 120)
+		p3 = (170, 120)
+		# Drawing the triangle with the help of lines
+		#  on the black window With given points
+		# cv2.line is the inbuilt function in opencv library
+		cv2.line(blackdrop, p1, p2, (255, 0, 0), 3)
+		cv2.line(blackdrop, p2, p3, (255, 0, 0), 3)
+		cv2.line(blackdrop, p1, p3, (255, 0, 0), 3)
+		cv2.rectangle(blackdrop,(125,155),(195,225),(0,255,0),-1)
+		cv2.putText(blackdrop,c4,(10,340), font, 4,(255,255,255),2,cv2.LINE_AA)
+		cv2.rectangle(blackdrop,(155,265),(165,335),(255,255,0),-1)
+		cv2.putText(blackdrop,c5,(10,450), font, 4,(255,255,255),2,cv2.LINE_AA)
+		cv2.circle(blackdrop,(160,410), 40, (0,0,255), -1)
 		cv2.imshow("blackdrop", blackdrop)
 		return shape
