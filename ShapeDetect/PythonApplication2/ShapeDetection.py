@@ -59,8 +59,7 @@ for c in cnts:
 	c *= ratio
 	c = c.astype("int")
 	cv2.drawContours(crop, [c], -1, (0, 255, 0), 2)
-	cv2.putText(crop, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX,
-		0.5, (100, 100, 100), 2)
+	cv2.putText(crop, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (100, 100, 100), 2)
 	# show the output image
 cv2.imshow("Image", crop)
 
