@@ -67,6 +67,15 @@ class ShapeDetector:
 		font = cv2.FONT_HERSHEY_SIMPLEX
 		cv2.putText(blackdrop,c2,(10,120), font, 4,(255,255,255),2,cv2.LINE_AA)
 		cv2.putText(blackdrop,c3,(10,230), font, 4,(255,255,255),2,cv2.LINE_AA)
+		p1 = (155, 40)
+		p2 = (120, 120)
+		p3 = (170, 120)
+		# Drawing the triangle with the help of lines
+		#  on the black window With given points
+		# cv2.line is the inbuilt function in opencv library
+		cv2.line(blackdrop, p1, p2, (255, 0, 0), 3)
+		cv2.line(blackdrop, p2, p3, (255, 0, 0), 3)
+		cv2.line(blackdrop, p1, p3, (255, 0, 0), 3)
 		cv2.rectangle(blackdrop,(125,155),(195,225),(0,255,0),-1)
 		cv2.putText(blackdrop,c4,(10,340), font, 4,(255,255,255),2,cv2.LINE_AA)
 		cv2.rectangle(blackdrop,(155,265),(165,335),(255,255,0),-1)

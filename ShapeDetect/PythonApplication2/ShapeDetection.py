@@ -1,3 +1,4 @@
+#!/usr/bin/env/
 # USAGE
 # python detect_shapes.py --image shapes_and_colors.png
 
@@ -9,7 +10,6 @@ import imutils
 import cv2
 import numpy as np
 import time
-from edgedetect.shapedetector import s1, s2, s3, s4, s5
 
 # load the image/video
 cap = cv2.VideoCapture(0)
