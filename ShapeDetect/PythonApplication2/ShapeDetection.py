@@ -8,23 +8,22 @@ import argparse
 import imutils
 import cv2
 import numpy as np
-import time
-from edgedetect.shapedetector import s1, s2, s3, s4, s5
+
 
 # load the image/video
 cap = cv2.VideoCapture(0)
-while(True):
-    # Capture frame-by-frame
+while True:
+	# Capture frame-by-frame
 	ret, frame = cap.read()
-	cv2.rectangle(frame, (110,400), (510,100), (255,255,255), 3)
-	cv2.imshow('frame',frame)
+	cv2.rectangle(frame, (110, 400), (510, 100), (255, 255, 255), 3)
+	cv2.imshow('frame', frame)
 	if cv2.waitKey(1) & 0xFF == ord('p'):
 		break
 # crop image to fit frame and resize it for better processing!
-y=110
-x=120
-h=285
-w=380
+y = 110
+x = 120
+h = 285
+w = 380
 crop = frame[y:y+h, x:x+w]
 resized = imutils.resize(crop, width=520)
 ratio = crop.shape[0] / float(resized.shape[0])
@@ -39,8 +38,7 @@ ret, thresh = cv2.threshold(blurred, 60, 255, cv2.THRESH_BINARY_INV)
 cv2.imshow("thresh", thresh)
 # find contours in the thresholded image and initialize the
 # shape detector
-cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
-	cv2.CHAIN_APPROX_SIMPLE)
+cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 cnts = cnts[0] if imutils.is_cv2() else cnts[1]
 sd = ShapeDetector()
 
@@ -49,8 +47,8 @@ for c in cnts:
 	# compute the center of the contour, then detect the name of the
 	# shape using only the contour
 	M = cv2.moments(c)
-	cX = int((M["m10"] / (M["m00"]+1e-7)) * ratio)
-	cY = int((M["m01"] / (M["m00"]+1e-7)) * ratio)
+	cX = int((M["m10"] / (M["m00"] + 1e-7)) * ratio)
+	cY = int((M["m01"] / (M["m00"] + 1e-7)) * ratio)
 	shape = sd.detect(c)
 
 	# multiply the contour (x, y)-coordinates by the resize ratio,
