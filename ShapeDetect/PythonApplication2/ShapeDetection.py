@@ -1,17 +1,18 @@
 #!/usr/bin/env/
 # USAGE
-# python detect_shapes.py --image shapes_and_colors.png
+#needs ros support but no one wants to do it.
 
 
 # import the necessary packages
 from edgedetect.shapedetector import ShapeDetector
+import argparse
 import imutils
 import cv2
 import numpy as np
 
 
 # load the image/video
-cap = cv2.VideoCapture('video.mp4')
+cap = cv2.VideoCapture(0)
 while True:
 	# Capture frame-by-frame
 	ret, frame = cap.read()
@@ -32,8 +33,7 @@ ratio = crop.shape[0] / float(resized.shape[0])
 # and threshold it
 gray = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
 blurred = cv2.GaussianBlur(gray, (5, 5), 0)
-lower = np.array([0, 0, 0])
-upper = np.array([60, 60, 60])
+
 ret, thresh = cv2.threshold(blurred, 60, 255, cv2.THRESH_BINARY_INV)
 cv2.imshow("thresh", thresh)
 # find contours in the thresholded image and initialize the
