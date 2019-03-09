@@ -5,7 +5,7 @@ import numpy as np
 
 class ShapeDetector:
 	def __init__(self):
-		self.s1, self.s2, self.s3, self.s4, self.s5 = 0
+		self.s1 = self.s2 = self.s3 = self.s4 = self.s5 = 0
 		pass
 
 	def detect(self, c):
@@ -20,7 +20,7 @@ class ShapeDetector:
 		# s1 = s1 + 1
 		if len(approx) == 3:
 			shape = "triangle"
-			s2 = s2 + 1
+			self.s2 = self.s2 + 1
 
 		# if the shape has 4 vertices, it is either a square or
 		# a rectangle
@@ -34,10 +34,10 @@ class ShapeDetector:
 			# equal to one, otherwise, the shape is a rectangle
 			if 0.75 <= ar <= 1.35:
 				shape = "square"
-				s3 = s3 + 1
+				self.s3 = self.s3 + 1
 			else:
 				shape = "rectangle"
-				s4 = s4 + 1
+				self.s4 = self.s4 + 1
 
 		# if the shape is a pentagon, it will have 5 vertices
 		# elif len(approx) == 5:
