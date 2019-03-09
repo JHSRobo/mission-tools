@@ -6,7 +6,7 @@ s3 = 0
 s4 = 0
 s5 = 0
 import cv2
-
+import numpy as np
 class ShapeDetector:
 	def __init__(self):
 		pass
@@ -40,7 +40,7 @@ class ShapeDetector:
 
 			# a square will have an aspect ratio that is approximately
 			# equal to one, otherwise, the shape is a rectangle
-			if ar >= 0.55 and ar <= 1.55:
+			if ar >= 0.75 and ar <= 1.35:
 				shape = "square"
 				s3 = s3 + 1
 			else:
@@ -57,5 +57,20 @@ class ShapeDetector:
 			s5 = s5 + 1
 
 		# return the name of the shape
-		print("lines", s1, "triangles", s2, "Squares", s3, "rectangles", s4, "circles", s5)
+		print(s1,"lines,", s2, "triangles,", s3, "Squares,", s4, "rectangles,", s5, "circles")
+		c1 = str(s1)
+		c2 = str(s2)
+		c3 = str(s3)
+		c4 = str(s4)
+		c5 = str(s5)
+		blackdrop = np.zeros((1024,512,3), np.uint8)
+		font = cv2.FONT_HERSHEY_SIMPLEX
+		cv2.putText(blackdrop,c2,(10,120), font, 4,(255,255,255),2,cv2.LINE_AA)
+		cv2.putText(blackdrop,c3,(10,230), font, 4,(255,255,255),2,cv2.LINE_AA)
+		cv2.rectangle(blackdrop,(125,155),(195,225),(0,255,0),-1)
+		cv2.putText(blackdrop,c4,(10,340), font, 4,(255,255,255),2,cv2.LINE_AA)
+		cv2.rectangle(blackdrop,(155,265),(165,335),(255,255,0),-1)
+		cv2.putText(blackdrop,c5,(10,450), font, 4,(255,255,255),2,cv2.LINE_AA)
+		cv2.circle(blackdrop,(160,410), 40, (0,0,255), -1)
+		cv2.imshow("blackdrop", blackdrop)
 		return shape

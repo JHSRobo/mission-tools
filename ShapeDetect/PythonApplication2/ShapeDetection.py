@@ -3,23 +3,22 @@
 
 
 # import the necessary packages
-from pyimagesearch.shapedetector import ShapeDetector
+from edgedetect.shapedetector import ShapeDetector
 import argparse
 import imutils
 import cv2
 import numpy as np
 import time
-
+from edgedetect.shapedetector import s1, s2, s3, s4, s5
 
 # load the image and resize it to a smaller factor so that
 cap = cv2.VideoCapture(0)
-i=0
 while(True):
     # Capture frame-by-frame
 	ret, frame = cap.read()
 	cv2.rectangle(frame, (110,400), (510,100), (255,255,255), 3)
 	cv2.imshow('frame',frame)
-	if cv2.waitKey(1) & 0xFF == ord('q'):
+	if cv2.waitKey(1) & 0xFF == ord('p'):
 		break
 y=110
 x=120
@@ -37,7 +36,6 @@ lower = np.array([0, 0, 0])
 upper = np.array([60, 60, 60])
 ret, thresh = cv2.threshold(blurred, 60, 255, cv2.THRESH_BINARY_INV)
 cv2.imshow("thresh", thresh)
-cv2.waitKey(0)
 # find contours in the thresholded image and initialize the
 # shape detector
 cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
@@ -64,4 +62,5 @@ for c in cnts:
 		0.5, (100, 100, 100), 2)
 	# show the output image
 cv2.imshow("Image", crop)
+
 cv2.waitKey(0)
