@@ -33,8 +33,14 @@ ratio = crop.shape[0] / float(resized.shape[0])
 # and threshold it
 gray = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
 blurred = cv2.GaussianBlur(gray, (5, 5), 0)
-
-ret, thresh = cv2.threshold(blurred, 60, 255, cv2.THRESH_BINARY_INV)
+##generic thresholhing
+ret, thresh = cv2.threshold(blurred, 40, 255, cv2.THRESH_BINARY_INV)
+##adaptive threshholding
+#thresh = cv2.adaptiveThreshold(blurred ,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,\
+            #cv2.THRESH_BINARY_INV,13,6)
+#ret,thresh = cv2.threshold(blurred,0,255,cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
+#thresh = cv2.adaptiveThreshold(blurred,255,cv2.ADAPTIVE_THRESH_MEAN_C,\
+            #cv2.THRESH_BINARY_INV,11,6)
 cv2.imshow("thresh", thresh)
 # find contours in the thresholded image and initialize the
 # shape detector
