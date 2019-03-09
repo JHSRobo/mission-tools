@@ -5,14 +5,13 @@
 
 # import the necessary packages
 from edgedetect.shapedetector import ShapeDetector
-import argparse
 import imutils
 import cv2
 import numpy as np
 
 
 # load the image/video
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture('video.mp4')
 while True:
 	# Capture frame-by-frame
 	ret, frame = cap.read()
