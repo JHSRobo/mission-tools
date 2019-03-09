@@ -11,7 +11,7 @@ import numpy as np
 import time
 from edgedetect.shapedetector import s1, s2, s3, s4, s5
 
-# load the image and resize it to a smaller factor so that
+# load the image/video
 cap = cv2.VideoCapture(0)
 while(True):
     # Capture frame-by-frame
@@ -20,6 +20,7 @@ while(True):
 	cv2.imshow('frame',frame)
 	if cv2.waitKey(1) & 0xFF == ord('p'):
 		break
+# crop image to fit frame and resize it for better processing!
 y=110
 x=120
 h=285
