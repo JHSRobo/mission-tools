@@ -57,7 +57,7 @@ class ShapeDetector:
 		c4 = str(self.s4)
 		c5 = str(self.s5)
 		#creates blackdrop for GUI
-		blackdrop = np.zeros((1024, 512, 3), np.uint8)
+		blackdrop = np.zeros((512, 512, 3), np.uint8)
 		font = cv2.FONT_HERSHEY_SIMPLEX
 		#displays number of triangles
 		cv2.putText(blackdrop,c2,(10,120), font, 4,(255,255,255),2,cv2.LINE_AA)
