@@ -19,8 +19,15 @@ while True:
 	ret, frame = cap.read()
 	cv2.rectangle(frame, (110, 400), (510, 100), (255, 255, 255), 3)
 	cv2.imshow('frame', frame)
-	if cv2.waitKey(1) & 0xFF == ord('p'):
+	k = cv2.waitKey(33)
+	if k==97:
+		mode = 1
 		break
+	elif k==115:
+		mode = 2
+		break
+	elif k==255:
+		continue
 # crop image to fit frame and resize it for better processing!
 y = 110
 x = 120
@@ -35,10 +42,12 @@ ratio = crop.shape[0] / float(resized.shape[0])
 gray = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
 blurred = cv2.GaussianBlur(gray, (5, 5), 0)
 ##generic thresholhing
-#ret, thresh = cv2.threshold(blurred, 60, 255, cv2.THRESH_BINARY_INV)
+if mode == 2:
+	ret, thresh = cv2.threshold(blurred, 60, 255, cv2.THRESH_BINARY_INV)
 ##adaptive threshholding
-thresh = cv2.adaptiveThreshold(blurred ,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,\
-            cv2.THRESH_BINARY_INV,11,6)
+if mode == 1:
+	thresh = cv2.adaptiveThreshold(blurred ,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,\
+            	cv2.THRESH_BINARY_INV,11,6)
 #ret,thresh = cv2.threshold(blurred,0,255,cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
 #thresh = cv2.adaptiveThreshold(blurred,255,cv2.ADAPTIVE_THRESH_MEAN_C,\
             #cv2.THRESH_BINARY_INV,11,6)
@@ -56,6 +65,7 @@ for c in cnts:
 	global s4
 	global s5
 	global thresh
+	global gray
 	# compute the center of the contour, then detect the name of the
 	# shape using only the contour
 	M = cv2.moments(c)
@@ -69,7 +79,7 @@ for c in cnts:
 	if shape == "rectangle":
 		s4 += 1
 	if shape == "circle":
-		circles = cv2.HoughCircles(thresh,cv2.HOUGH_GRADIENT,1,20,param1=50,param2=30,minRadius=0,maxRadius=0)
+		circles = cv2.HoughCircles(gray,cv2.HOUGH_GRADIENT,1,20,param1=50,param2=30,minRadius=0,maxRadius=0)
 		if circles is not None:
 			s5 += 1
 
