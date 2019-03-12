@@ -69,7 +69,9 @@ for c in cnts:
 	if shape == "rectangle":
 		s4 += 1
 	if shape == "circle":
-		s5 += 1
+		circles = cv2.HoughCircles(thresh,cv2.HOUGH_GRADIENT,1,20,param1=50,param2=30,minRadius=0,maxRadius=0)
+		if circles is not None:
+			s5 += 1
 
 	# multiply the contour (x, y)-coordinates by the resize ratio,
 	# then draw the contours and the name of the shape on the image
