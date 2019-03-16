@@ -1,5 +1,7 @@
-
-def mateshow(x):
+import cv2
+import numpy as np
+def mateshow(x, y):
+	shape = "unidentified"
 	if shape == x:
 		s2 += 1
 	if shape == x:
@@ -7,7 +9,7 @@ def mateshow(x):
 	if shape == x:
 		s4 += 1
 	if shape == x:
-		circles = cv2.HoughCircles(gray,cv2.HOUGH_GRADIENT,1,20,param1=50,param2=30,minRadius=0,maxRadius=0)
+		circles = cv2.HoughCircles(y,cv2.HOUGH_GRADIENT,1,20,param1=50,param2=30,minRadius=0,maxRadius=0)
 		if circles is not None:
 			s5 += 1
 
