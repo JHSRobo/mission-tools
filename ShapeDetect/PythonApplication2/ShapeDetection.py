@@ -46,8 +46,7 @@ if mode == 2:
 	ret, thresh = cv2.threshold(blurred, 60, 255, cv2.THRESH_BINARY_INV)
 ##adaptive threshholding
 if mode == 1:
-	thresh = cv2.adaptiveThreshold(blurred ,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,\
-            	cv2.THRESH_BINARY_INV,11,6)
+	thresh = cv2.adaptiveThreshold(blurred ,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV,11,6)
 #ret,thresh = cv2.threshold(blurred,0,255,cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
 #thresh = cv2.adaptiveThreshold(blurred,255,cv2.ADAPTIVE_THRESH_MEAN_C,\
             #cv2.THRESH_BINARY_INV,11,6)
@@ -60,12 +59,6 @@ sd = ShapeDetector()
 
 # loop over the contours
 for c in cnts:
-	global s2
-	global s3
-	global s4
-	global s5
-	global thresh
-	global gray
 	# compute the center of the contour, then detect the name of the
 	# shape using only the contour
 	M = cv2.moments(c)
