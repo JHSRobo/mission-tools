@@ -20,7 +20,7 @@ while True:
 	ratio = frame.shape[0] / float(resized.shape[0])
 	hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 	#blurred = cv2.GaussianBlur(hsv, (5, 5), 0)
-	lower_red = np.array([103,100,50])
+	lower_red = np.array([103,120,50])
 	upper_red = np.array([130,255,255])
 	k = cv2.waitKey(33)
 	if k==97:
@@ -46,7 +46,12 @@ while True:
 		if shape == "rectangle":
 			cv2.imwrite("is-it-a-rectange.png", mask)
 			sqtest = cv2.imread("is-it-a-rectange.png", 0)
-			thresh = cv2.adaptiveThreshold(sqtest,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV,11,2)
+			y = 110
+			x = 120
+			h = 285
+			w = 380
+			crop = sqtest[y:y+h, x:x+w]
+			thresh = cv2.adaptiveThreshold(crop,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV,11,2)
 			cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 			cnts = cnts[0] if imutils.is_cv2() else cnts[1]
 			sd = ShapeDetector()
@@ -66,7 +71,8 @@ while True:
 					cv2.drawContours(thresh, [c], -1, (0, 255, 0), 2)
 					cv2.putText(thresh, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (100, 100, 100), 2)
 					cv2.imshow('thresh',thresh)
-					#sys.exit("foundthecrack!")
+					cv2.imwrite("foundthecrack.png", frame)
+					sys.exit("found the crack!")
 					k = 97
 					break
 				else:
