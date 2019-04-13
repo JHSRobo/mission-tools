@@ -20,7 +20,7 @@ while True:
 	ratio = frame.shape[0] / float(resized.shape[0])
 	hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 	#blurred = cv2.GaussianBlur(hsv, (5, 5), 0)
-	lower_red = np.array([103,120,50])
+	lower_red = np.array([103,150,50])
 	upper_red = np.array([130,255,255])
 	k = cv2.waitKey(33)
 	if k==97:
@@ -62,8 +62,6 @@ while True:
 				cX = int((M["m10"] / (M["m00"] + 1e-7)) * ratio)
 				cY = int((M["m01"] / (M["m00"] + 1e-7)) * ratio)
 				shape = sd.detect(c)
-				if shape == "square":
-					print("crack")
 				if shape == "rectangle":
 					c = c.astype("float")
 					c *= ratio
@@ -77,7 +75,7 @@ while True:
 					break
 				else:
 					try:
-						os.remove("my.png")
+						os.remove("foundthecrack.png")
 					except: pass
 
 				# multiply the contour (x, y)-coordinates by the resize ratio,
@@ -85,8 +83,8 @@ while True:
 				c = c.astype("float")
 				c *= ratio
 				c = c.astype("int")
-				cv2.drawContours(frame, [c], -1, (0, 255, 0), 2)
-				cv2.putText(frame, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (100, 100, 100), 2)
+				#cv2.drawContours(frame, [c], -1, (0, 255, 0), 2)
+				#cv2.putText(frame, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (100, 100, 100), 2)
 
 		# multiply the contour (x, y)-coordinates by the resize ratio,
 		# then draw the contours and the name of the shape on the image
