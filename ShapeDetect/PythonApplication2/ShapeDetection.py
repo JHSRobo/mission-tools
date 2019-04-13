@@ -17,7 +17,8 @@ s2 = s3 = s4 = s5 = 0
 IP_ADDRESS = "rtsp://root:jhsrobo@192.168.1.201/axis-media/media.amp"
 
 # load the image/video
-cap = cv2.VideoCapture(IP_ADDRESS)
+#cap = cv2.VideoCapture(IP_ADDRESS)
+cap = cv2.VideoCapture(0)
 while True:
 	# Capture frame-by-frame
 	ret, frame = cap.read()
@@ -38,6 +39,25 @@ x = 120
 h = 285
 w = 380
 crop = frame[y:y+h, x:x+w]
+############################################################################
+gray2 = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
+edged = cv2.Canny(gray2, 50, 100)
+cv2.imshow("Original", crop)
+# find contours in the image and initialize the mask that will be
+# used to remove the bad contours
+cnts = cv2.findContours(edged.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+cnts = imutils.grab_contours(cnts)
+mask = np.ones(crop.shape[:2], dtype="uint8") * 255
+
+# loop over the contours
+for c in cnts:
+	# if the contour is bad, draw it on the mask
+	if True:
+		cv2.drawContours(mask, [c], -1, (0,0,0), -1)
+
+# remove the contours from the image and show the resulting images
+crop = cv2.bitwise_and(crop, crop, mask=mask)
+###########################################################################
 resized = imutils.resize(crop, width=520)
 ratio = crop.shape[0] / float(resized.shape[0])
 
@@ -47,17 +67,23 @@ gray = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
 blurred = cv2.GaussianBlur(gray, (5, 5), 0)
 ##generic thresholhing
 if mode == 2:
-	ret, thresh = cv2.threshold(blurred, 100, 255, cv2.THRESH_BINARY_INV)
+	ret, thresh = cv2.threshold(blurred, 60, 255, cv2.THRESH_BINARY_INV)
 ##adaptive threshholding
 if mode == 1:
-	thresh = cv2.adaptiveThreshold(blurred ,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV,11,7)
+	thresh = cv2.adaptiveThreshold(blurred ,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV,11,6)
 #ret,thresh = cv2.threshold(blurred,0,255,cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
 #thresh = cv2.adaptiveThreshold(blurred,255,cv2.ADAPTIVE_THRESH_MEAN_C,\
             #cv2.THRESH_BINARY_INV,11,6)
 cv2.imshow("thresh", thresh)
+area = cv2.contourArea(c)
+print(area)
+mask = np.ones(thresh.shape[:2], dtype="uint8") * 255
+if True:
+	cv2.drawContours(mask, [c], -1, (255,255,255), -1)
+masko = cv2.bitwise_and(thresh, thresh, mask=mask)
 # find contours in the thresholded image and initialize the
 # shape detector
-cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+cnts = cv2.findContours(masko.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 cnts = cnts[0] if imutils.is_cv2() else cnts[1]
 sd = ShapeDetector()
 
@@ -82,7 +108,7 @@ for c in cnts:
 	#converts ints to strings
 
 	# show the output image
-
+cv2.imshow("Mask", mask)
 cv2.imshow("Image", crop)
 
 cv2.waitKey(0)
