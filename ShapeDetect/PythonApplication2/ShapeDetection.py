@@ -11,8 +11,13 @@ import cv2
 import numpy as np
 s2 = s3 = s4 = s5 = 0
 
+# IP address where the camera is. THIS IS FOR THE AXIS / WEBCAM ONLY. This should be updated in ROSBasic to work with ros
+# in package shape_detect
+# https://github.com/JHSRobo/ROSBasic
+IP_ADDRESS = "rtsp://root:jhsrobo@192.168.1.201/axis-media/media.amp"
+
 # load the image/video
-cap = cv2.VideoCapture("rtsp://root:jhsrobo@192.168.1.201/axis-media/media.amp")
+cap = cv2.VideoCapture(IP_ADDRESS)
 while True:
 	# Capture frame-by-frame
 	ret, frame = cap.read()
