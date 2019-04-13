@@ -68,10 +68,10 @@ class ShapeDetector:
 		cv2.line(blackdrop, p1, p2, (0, 0, 255), 3)
 		cv2.line(blackdrop, p2, p3, (0, 0, 255), 3)
 		cv2.line(blackdrop, p1, p3, (0, 0, 255), 3)
-		cv2.rectangle(blackdrop,(125,155),(195,225),(0,0,255),-1)
+		cv2.rectangle(blackdrop,(125,155),(195,225),(0,0,255),3)
 		cv2.putText(blackdrop,c4,(10,340), font, 4,(255,255,255),2,cv2.LINE_AA)
-		cv2.rectangle(blackdrop,(155,265),(165,335),(0,0,255),-1)
+		cv2.rectangle(blackdrop,(155,265),(165,335),(0,0,255),3)
 		cv2.putText(blackdrop,c5,(10,450), font, 4,(255,255,255),2,cv2.LINE_AA)
-		cv2.circle(blackdrop,(160,410), 40, (0,0,255), -1)
+		cv2.circle(blackdrop,(160,410), 40, (0,0,255), 3)
 		cv2.imshow("blackdrop", blackdrop)
 		return shape

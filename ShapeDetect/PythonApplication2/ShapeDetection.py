@@ -47,10 +47,10 @@ gray = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
 blurred = cv2.GaussianBlur(gray, (5, 5), 0)
 ##generic thresholhing
 if mode == 2:
-	ret, thresh = cv2.threshold(blurred, 90, 255, cv2.THRESH_BINARY_INV)
+	ret, thresh = cv2.threshold(blurred, 100, 255, cv2.THRESH_BINARY_INV)
 ##adaptive threshholding
 if mode == 1:
-	thresh = cv2.adaptiveThreshold(blurred ,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV,11,9)
+	thresh = cv2.adaptiveThreshold(blurred ,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV,11,7)
 #ret,thresh = cv2.threshold(blurred,0,255,cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
 #thresh = cv2.adaptiveThreshold(blurred,255,cv2.ADAPTIVE_THRESH_MEAN_C,\
             #cv2.THRESH_BINARY_INV,11,6)
