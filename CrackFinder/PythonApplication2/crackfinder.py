@@ -20,7 +20,7 @@ while True:
 	ratio = frame.shape[0] / float(resized.shape[0])
 	hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 	#blurred = cv2.GaussianBlur(hsv, (5, 5), 0)
-	lower_red = np.array([103,150,50])
+	lower_red = np.array([103,140,50])
 	upper_red = np.array([130,255,255])
 	k = cv2.waitKey(33)
 	if k==97:
@@ -34,6 +34,7 @@ while True:
 	cnts = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 	cnts = cnts[0] if imutils.is_cv2() else cnts[1]
 	sd = ShapeDetector()
+	idx = 0
 	for c in cnts:
 		# compute the center of the contour, then detect the name of the
 		# shape using only the contour
@@ -41,8 +42,12 @@ while True:
 		cX = int((M["m10"] / (M["m00"] + 1e-7)) * ratio)
 		cY = int((M["m01"] / (M["m00"] + 1e-7)) * ratio)
 		shape = sd.detect(c)
-		if shape == "square":
-			print("crack")
+		x,y,w,h = cv2.boundingRect(c)
+		if w>68 and h>68:
+			idx+=1
+			new_img = frame[y:y+h,x:x+w]
+			cv2.imshow('croppo',new_img)
+			cv2.imwrite(str(idx) + '.png', new_img)
 		if shape == "rectangle":
 			cv2.imwrite("is-it-a-rectange.png", mask)
 			sqtest = cv2.imread("is-it-a-rectange.png", 0)
@@ -62,21 +67,38 @@ while True:
 				cX = int((M["m10"] / (M["m00"] + 1e-7)) * ratio)
 				cY = int((M["m01"] / (M["m00"] + 1e-7)) * ratio)
 				shape = sd.detect(c)
-				if shape == "rectangle":
-					c = c.astype("float")
-					c *= ratio
-					c = c.astype("int")
-					cv2.drawContours(thresh, [c], -1, (0, 255, 0), 2)
-					cv2.putText(thresh, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (100, 100, 100), 2)
-					cv2.imshow('thresh',thresh)
-					cv2.imwrite("foundthecrack.png", frame)
-					sys.exit("found the crack!")
-					k = 97
-					break
-				else:
-					try:
-						os.remove("foundthecrack.png")
-					except: pass
+				if w>0 and h>0:
+					if shape == "rectangle":
+						c = c.astype("float")
+						c *= ratio
+						c = c.astype("int")
+						#cv2.drawContours(thresh, [c], -1, (0, 255, 0), 2)
+						#cv2.putText(thresh, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (100, 100, 100), 2)
+						cv2.imshow('thresh',thresh)
+						cv2.imwrite("foundthecrack.png", frame)
+						image4 = frame
+						#gray3=cv2.cvtColor(image4,cv2.COLOR_BGR2GRAY)
+						#edged = cv2.Canny(image4, 10, 250)
+						lower = np.array([0, 0, 0])
+						upper = np.array([40, 40, 40])
+						thresh100 = cv2.inRange(image4, lower, upper)
+						#blurred3 = cv2.GaussianBlur(gray3, (5, 5), 0)
+						#thresh3 = cv2.threshold(blurred3, 60, 255, cv2.THRESH_BINARY)
+						cnts = cv2.findContours(thresh100.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+						cnts = cnts[0] if imutils.is_cv2() else cnts[1]
+						cv2.imshow('blackcrop', thresh100)
+						for c in cnts:
+							x,y,w,h = cv2.boundingRect(c)
+							if w>200 and h>200:
+								new_img1=image4[y:y+h,x:x+w]
+								cv2.imshow('blackcrop.png', new_img1)
+						#sys.exit("found the crack!")
+						k = 97
+						break
+					else:
+						try:
+							os.remove("foundthecrack.png")
+						except: pass
 
 				# multiply the contour (x, y)-coordinates by the resize ratio,
 				# then draw the contours and the name of the shape on the image
@@ -91,8 +113,8 @@ while True:
 		c = c.astype("float")
 		c *= ratio
 		c = c.astype("int")
-		cv2.drawContours(frame, [c], -1, (0, 255, 0), 2)
-		cv2.putText(frame, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (100, 100, 100), 2)
+		#cv2.drawContours(frame, [c], -1, (0, 255, 0), 2)
+		#cv2.putText(frame, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (100, 100, 100), 2)
 	#thresh = cv2.adaptiveThreshold(hsv ,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV,11,6)
 	#ret, thresh2 = cv2.threshold(ret, 60, 255, cv2.THRESH_BINARY_INV)
 	cv2.imshow('frame',frame)
