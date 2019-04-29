@@ -91,7 +91,7 @@ while True:
 							x,y,w,h = cv2.boundingRect(c)
 							if w>200 and h>200:
 								new_img1=image4[y:y+h,x:x+w]
-								cv2.imshow('blackcrop.png', new_img1)
+								cv2.imsave('blackcrop.png', new_img1)
 						#sys.exit("found the crack!")
 						k = 97
 						break

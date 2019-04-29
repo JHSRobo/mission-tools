@@ -27,9 +27,11 @@ while True:
 	k = cv2.waitKey(33)
 	if k==97:
 		mode = 1
+		ret, frame = cap.read()
 		break
 	elif k==115:
 		mode = 2
+		ret, frame = cap.read()
 		break
 	elif k==255:
 		continue
@@ -39,27 +41,10 @@ x = 120
 h = 285
 w = 380
 crop = frame[y:y+h, x:x+w]
-############################################################################
-gray2 = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
-edged = cv2.Canny(gray2, 50, 100)
-cv2.imshow("Original", crop)
-# find contours in the image and initialize the mask that will be
-# used to remove the bad contours
-cnts = cv2.findContours(edged.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
-cnts = imutils.grab_contours(cnts)
-mask = np.ones(crop.shape[:2], dtype="uint8") * 255
-
-# loop over the contours
-for c in cnts:
-	# if the contour is bad, draw it on the mask
-	if True:
-		cv2.drawContours(mask, [c], -1, (0,0,0), -1)
-
-# remove the contours from the image and show the resulting images
-crop = cv2.bitwise_and(crop, crop, mask=mask)
-###########################################################################
-resized = imutils.resize(crop, width=520)
-ratio = crop.shape[0] / float(resized.shape[0])
+cv2.imwrite('frame.png', crop)
+image = cv2.imread("frame.png")
+resized = imutils.resize(image, width=380)
+ratio = image.shape[0] / float(resized.shape[0])
 
 # convert the resized image to grayscale, blur it slightly,
 # and threshold it
@@ -75,18 +60,10 @@ if mode == 1:
 #thresh = cv2.adaptiveThreshold(blurred,255,cv2.ADAPTIVE_THRESH_MEAN_C,\
             #cv2.THRESH_BINARY_INV,11,6)
 cv2.imshow("thresh", thresh)
-area = cv2.contourArea(c)
-print(area)
-mask = np.ones(thresh.shape[:2], dtype="uint8") * 255
-if True:
-	cv2.drawContours(mask, [c], -1, (255,255,255), -1)
-masko = cv2.bitwise_and(thresh, thresh, mask=mask)
-# find contours in the thresholded image and initialize the
-# shape detector
-cnts = cv2.findContours(masko.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 cnts = cnts[0] if imutils.is_cv2() else cnts[1]
 sd = ShapeDetector()
-
+idx=0
 # loop over the contours
 for c in cnts:
 	# compute the center of the contour, then detect the name of the
@@ -95,20 +72,21 @@ for c in cnts:
 	cX = int((M["m10"] / (M["m00"] + 1e-7)) * ratio)
 	cY = int((M["m01"] / (M["m00"] + 1e-7)) * ratio)
 	shape = sd.detect(c)
-
-
-
+	x,y,w,h = cv2.boundingRect(c)
+	if w>30 and h>30:
+		idx+=1
+		new_img=image[y:y+h,x:x+w]
+		cv2.imshow(str(idx) + '.png', new_img)
 	# multiply the contour (x, y)-coordinates by the resize ratio,
 	# then draw the contours and the name of the shape on the image
 	c = c.astype("float")
 	c *= ratio
 	c = c.astype("int")
-	cv2.drawContours(crop, [c], -1, (0, 255, 0), 2)
-	cv2.putText(crop, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (100, 100, 100), 2)
+	cv2.drawContours(image, [c], -1, (0, 255, 0), 2)
+	cv2.putText(image, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (100, 100, 100), 2)
 	#converts ints to strings
 
 	# show the output image
-cv2.imshow("Mask", mask)
-cv2.imshow("Image", crop)
+cv2.imshow("Image", image)
 
 cv2.waitKey(0)
