@@ -17,8 +17,8 @@ s2 = s3 = s4 = s5 = 0
 IP_ADDRESS = "rtsp://root:jhsrobo@192.168.1.201/axis-media/media.amp"
 
 # load the image/video
-#cap = cv2.VideoCapture(IP_ADDRESS)
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(IP_ADDRESS)
+#cap = cv2.VideoCapture(0)
 while True:
 	# Capture frame-by-frame
 	ret, frame = cap.read()
@@ -52,10 +52,10 @@ gray = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
 blurred = cv2.GaussianBlur(gray, (5, 5), 0)
 ##generic thresholhing
 if mode == 2:
-	ret, thresh = cv2.threshold(blurred, 60, 255, cv2.THRESH_BINARY_INV)
+	ret, thresh = cv2.threshold(blurred, 100, 255, cv2.THRESH_BINARY_INV)
 ##adaptive threshholding
 if mode == 1:
-	thresh = cv2.adaptiveThreshold(blurred ,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV,11,6)
+	thresh = cv2.adaptiveThreshold(blurred ,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV,13,5)
 #ret,thresh = cv2.threshold(blurred,0,255,cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
 #thresh = cv2.adaptiveThreshold(blurred,255,cv2.ADAPTIVE_THRESH_MEAN_C,\
             #cv2.THRESH_BINARY_INV,11,6)

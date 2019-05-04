@@ -31,6 +31,6 @@ class ShapeDetector:
 
 
 
-		print(self.s1, "lines,", self.s2, "triangles,", self.s3, "Squares,", self.s4, "rectangles,", self.s5, "circles")
+		#print(self.s1, "lines,", self.s2, "triangles,", self.s3, "Squares,", self.s4, "rectangles,", self.s5, "circles")
 		# return the name of the shape
 		return shape
