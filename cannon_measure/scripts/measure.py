@@ -37,9 +37,9 @@ def get_measurement(cv_image):
         return sqrt(sqr(mouse_pos['inital_x'] - mouse_pos['secondary_x']) + sqr(mouse_pos['inital_x'] - mouse_pos['secondary_x']))
 
 
-def measure():
+def measure(data):
     refrence = 15.06
-    msg = cannon_measure()
+    msg = CannonMeasureResponse()
 
     header = Header()
 
@@ -130,10 +130,12 @@ def measure():
         length = get_measurement(cv_image)
         msg.canon_length = length / ratio
 
+    return msg
+
 
 def listener():
     rospy.init_node("measure")
-    rospy.Service('start_cannon_measure', cannon_measure, measure)
+    rospy.Service('start_cannon_measure', CannonMeasure, measure)
     rospy.spin()
 
 if __name__ == "__main__":
