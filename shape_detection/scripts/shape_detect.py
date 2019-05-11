@@ -13,13 +13,6 @@ from std_msgs.msg import Header
 from std_msgs.msg import UInt8
 import cv2
 
-mode = 1 # Mode for shape detect
-
-def modeSwitch(data):
-    if data.data == 1 or 2:
-        mode = data.data
-    else:
-        mode = 1
 
 class ShapeDetector:
     def __init__(self):
@@ -52,10 +45,20 @@ class ShapeDetector:
 
 
 def find_the_shape(data):
+    mode = data.mode
+    msg = shape_detect()
+
+    header = Header()
+
+    # update message headers
+    header.stamp = rospy.Time.now()
+    header.frame_id = 'humidity_data'
+    msg.header = header
     try:
         data = rospy.wait_for_message("/rov/image_raw", Image, timeout=5)
     except rospy.ROSException:
         s2 = s3 = s4 = s5 = None
+        return msg
     else:
         bridge = CvBridge()
         cv_image = bridge.imgmsg_to_cv2(data.data, desired_encoding="passthrough")
@@ -147,22 +150,14 @@ def find_the_shape(data):
                 # cv2.imshow("blackdrop", blackdrop)
 
                 # show the output image
+            return msg
     finally:
-        msg = shape_detect()
-
-        header = Header()
-
-        # update message headers
-        header.stamp = rospy.Time.now()
-        header.frame_id = 'humidity_data'
-        msg.header = header
 
         msg.triangles = s2
         msg.square = s3
         msg.rectangle = s4
         msg.circles = s5
 
-        return msg
         # cv2.imshow("Image", crop)
         # cv2.waitKey(0)
         # exit(0)
@@ -171,7 +166,6 @@ def find_the_shape(data):
 def listener():
     rospy.init_node("shape_detect")
     rospy.Service('start_shape_detect', shape_detect, find_the_shape)
-    rospy.Subscriber("shape_detect/mode", UInt8, modeSwitch)
     rospy.spin()
 
 

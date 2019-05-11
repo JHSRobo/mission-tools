@@ -90,6 +90,31 @@ def measure():
         length = get_measurement(cv_image)
         msg.canon_height_short = length / ratio
 
+    # height of bore
+    clicked = False
+    while not clicked:
+        def on_click(x, y, button, pressed):
+            clicked = True
+
+        listener = mouse.Listener(on_click=on_click)
+        listener.start()
+
+    try:
+        data = rospy.wait_for_message("/rov/image_raw", Image, timeout=5)
+    except rospy.ROSException:
+        return None
+    else:
+        bridge = CvBridge()
+        cv_image = bridge.imgmsg_to_cv2(data.data, desired_encoding="passthrough")
+
+        length = get_measurement(cv_image)
+        ratio = length / refrence
+
+        # get irl distance
+        length = get_measurement(cv_image)
+        msg.canon_bore = length / ratio
+
+
     # cannon length
     try:
         data = rospy.wait_for_message("/rov/image_raw", Image, timeout=5)
