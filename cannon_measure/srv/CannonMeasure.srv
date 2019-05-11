@@ -1,0 +1,8 @@
+
+---
+Header header
+
+uint8 cannon_height_tall
+uint8 cannon_height_short
+uint8 cannon_length
+uint8 cannon_bore
