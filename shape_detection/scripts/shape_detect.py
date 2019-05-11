@@ -54,7 +54,7 @@ def find_the_shape(data):
     header.frame_id = 'humidity_data'
     msg.header = header
     try:
-        data = rospy.wait_for_message("/rov/image_raw", Image, timeout=5)
+        data = rospy.wait_for_message("/raspicam_node/image/compress", Image, timeout=5)
     except rospy.ROSException:
         s2 = s3 = s4 = s5 = 0
         msg.triangles = s2
