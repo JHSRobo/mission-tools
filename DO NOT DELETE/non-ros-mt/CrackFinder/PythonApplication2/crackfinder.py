@@ -5,7 +5,7 @@
 
 # import the necessary packages
 #from edgedetect.shapedetector import ShapeDetector
-from edgedetect.shapedetector import ShapeDetector
+from edgedetectforcrack.shapedetectorforcrack import ShapeDetector
 import argparse
 import imutils
 import cv2
