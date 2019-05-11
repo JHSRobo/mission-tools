@@ -52,7 +52,6 @@ class ShapeDetector:
 
 
 def find_the_shape(data):
-    print(type(data))
     try:
         data = rospy.wait_for_message("/rov/image_raw", Image, timeout=5)
     except rospy.ROSException:
@@ -77,7 +76,7 @@ def find_the_shape(data):
             # and threshold it
             gray = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
             blurred = cv2.GaussianBlur(gray, (5, 5), 0)
-            # adaptive threshold
+            # adaptive thresholdca
             if mode == 1:
                 thresh = cv2.adaptiveThreshold(blurred, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 6)
             # generic threshold
