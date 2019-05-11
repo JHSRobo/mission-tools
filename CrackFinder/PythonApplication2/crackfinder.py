@@ -20,7 +20,7 @@ while True:
 	ratio = frame.shape[0] / float(resized.shape[0])
 	hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 	#blurred = cv2.GaussianBlur(hsv, (5, 5), 0)
-	lower_red = np.array([100,100,50])
+	lower_red = np.array([100,120,50])
 	upper_red = np.array([130,255,255])
 	k = cv2.waitKey(33)
 	if k==97:
@@ -43,7 +43,7 @@ while True:
 		cY = int((M["m01"] / (M["m00"] + 1e-7)) * ratio)
 		shape = sd.detect(c)
 		x,y,w,h = cv2.boundingRect(c)
-		if w>4 and h>4:
+		if w>1 and h>1:
 			idx+=1
 			new_img = frame[y:y+h,x:x+w]
 			cv2.imshow('croppo',new_img)
@@ -55,6 +55,16 @@ while True:
 			c *= ratio
 			c = c.astype("int")
 			cv2.drawContours(frame, [c], -1, (0, 0, 255), 2)
+			blueval0 = np.size(new_img, 0)
+			blueval1 = np.size(new_img, 1)
+			bluesmallside = min(blueval0, blueval1)
+			bluephatsize = max(blueval0, blueval1)
+			quickmaffsSMALLO = bluesmallside / 1.75
+			quickmaffsLARGO = bluesmallside / 1.87
+			lengthsmallo = bluephatsize / quickmaffsSMALLO
+			lengthLARGO = bluephatsize / quickmaffsLARGO
+			print("if 1.8: ", lengthsmallo)
+			print("if 1.9: ", lengthLARGO)
 		if shape == "rectangle":
 			cv2.imwrite("is-it-a-rectange.png", mask)
 			sqtest = cv2.imread("is-it-a-rectange.png", 0)
@@ -66,6 +76,7 @@ while True:
 			thresh = cv2.adaptiveThreshold(sqtest,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV,13,2)
 			cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 			cnts = cnts[0] if imutils.is_cv2() else cnts[1]
+			#print(cnts)
 			sd = ShapeDetector()
 			for c in cnts:
 				# compute the center of the contour, then detect the name of the
@@ -78,28 +89,39 @@ while True:
 					c = c.astype("float")
 					c *= ratio
 					c = c.astype("int")
-					#cv2.drawContours(thresh, [c], -1, (0, 255, 0), 2)
-					#cv2.putText(thresh, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (100, 100, 100), 2)
 					cv2.imshow('thresh',thresh)
 					cv2.imwrite("foundthecrack.png", frame)
+					blueval0 = np.size(new_img, 0)
+					blueval1 = np.size(new_img, 1)
+					bluesmallside = min(blueval0, blueval1)
+					bluephatsize = max(blueval0, blueval1)
+					quickmaffsSMALLO = bluesmallside / 1.8
+					quickmaffsLARGO = bluesmallside / 1.9
+					lengthsmallo = bluephatsize / quickmaffsSMALLO
+					lengthLARGO = bluephatsize / quickmaffsLARGO
+					print("if 1.8: ", lengthsmallo)
+					print("if 1.9: ", lengthLARGO)
 					#cv2.imwrite("foundthecrack.png", frame)
-					image4 = frame
-					gray3=cv2.cvtColor(image4,cv2.COLOR_BGR2GRAY)
+					#image4 = frame
+
+					#gray3=cv2.cvtColor(image4,cv2.COLOR_BGR2GRAY)
 					#edged = cv2.Canny(image4, 170, 250)
-					#lower = np.array([0, 0, 0])
-					#upper = np.array([70, 70, 70])
-					#thresh100 = cv2.inRange(image4, lower, upper)
-					blurred3 = cv2.GaussianBlur(gray3, (5, 5), 0)
+					#hsv = cv2.cvtColor(image4, cv2.COLOR_BGR2HSV)
+					#lower_black = np.array([0,0,0])
+					#upper_black = np.array([132,88,60])
+					#thresh100 = cv2.inRange(hsv, lower_black, upper_black)
+					#cv2.imshow('hsv', hsv)
+					#blurred3 = cv2.GaussianBlur(gray3, (5, 5), 0)
 					#thresh3 = cv2.threshold(blurred3, 100, 255, cv2.THRESH_BINARY)
-					thresh3 = cv2.adaptiveThreshold(blurred3 ,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV,13,4)
+					#thresh3 = cv2.adaptiveThreshold(blurred3 ,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV,15,8)
 					#cnts = cv2.findContours(thresh100.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-					cnts = cv2.findContours(thresh3.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+					#cnts = cv2.findContours(thresh3.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 					#cnts = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-					cnts = cnts[0] if imutils.is_cv2() else cnts[1]
+					#cnts = cnts[0] if imutils.is_cv2() else cnts[1]
 					#cv2.imshow('blackcrop', thresh100)
-					cv2.imshow('blackcrop', thresh3)
+					#cv2.imshow('blackcrop', thresh3)
 					#cv2.imshow('blackcrop', edged)
-					for c in cnts:
+					'''for c in cnts:
 						x,y,w,h = cv2.boundingRect(c)
 						if w>100 and h>100:
 							new_img1=image4[y:y+h,x:x+w]
@@ -134,7 +156,7 @@ while True:
 							try:
 								os.remove("foundthecrack.png")
 							except: pass
-
+'''
 			# multiply the contour (x, y)-coordinates by the resigratio
 			# then draw the contours and the name of the shape on the image
 			c = c.astype("float")
