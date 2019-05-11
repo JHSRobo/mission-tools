@@ -8,9 +8,8 @@ import imutils
 import rospy
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
-from shape_detection.srv import shape_detect
+from shape_detection.srv import *
 from std_msgs.msg import Header
-from std_msgs.msg import UInt8
 import cv2
 
 
@@ -46,7 +45,7 @@ class ShapeDetector:
 
 def find_the_shape(data):
     mode = data.mode
-    msg = shape_detect()
+    msg = ShapeDetectResponse()
 
     header = Header()
 
@@ -57,7 +56,11 @@ def find_the_shape(data):
     try:
         data = rospy.wait_for_message("/rov/image_raw", Image, timeout=5)
     except rospy.ROSException:
-        s2 = s3 = s4 = s5 = None
+        s2 = s3 = s4 = s5 = 0
+        msg.triangles = s2
+        msg.square = s3
+        msg.rectangle = s4
+        msg.circles = s5
         return msg
     else:
         bridge = CvBridge()
@@ -150,13 +153,11 @@ def find_the_shape(data):
                 # cv2.imshow("blackdrop", blackdrop)
 
                 # show the output image
+            msg.triangles = s2
+            msg.square = s3
+            msg.rectangle = s4
+            msg.circles = s5
             return msg
-    finally:
-
-        msg.triangles = s2
-        msg.square = s3
-        msg.rectangle = s4
-        msg.circles = s5
 
         # cv2.imshow("Image", crop)
         # cv2.waitKey(0)
@@ -165,7 +166,7 @@ def find_the_shape(data):
 
 def listener():
     rospy.init_node("shape_detect")
-    rospy.Service('start_shape_detect', shape_detect, find_the_shape)
+    rospy.Service('start_shape_detect', ShapeDetect, find_the_shape)
     rospy.spin()
 
 
