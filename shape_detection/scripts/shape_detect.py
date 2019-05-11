@@ -51,7 +51,8 @@ class ShapeDetector:
         return shape
 
 
-def find_the_shape():
+def find_the_shape(data):
+    print(type(data))
     try:
         data = rospy.wait_for_message("/rov/image_raw", Image, timeout=5)
     except rospy.ROSException:
