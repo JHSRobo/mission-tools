@@ -1,4 +1,4 @@
-#!/usr/bin/env/
+#!/usr/bin/env python
 
 # USAGE
 #needs ros support but no one wants to do it.
@@ -50,12 +50,6 @@ def callback(data):
     #blurred = cv2.GaussianBlur(hsv, (5, 5), 0)
     lower_red = np.array([100,110,50])
     upper_red = np.array([130,255,255])
-    k = cv2.waitKey(33)
-    if k==97:
-        #if you dare to touch the A key it will stop the program if it doesnt stop automatically
-        break
-    elif k==255:
-        continue
     mask = cv2.inRange(hsv, lower_red, upper_red)
     res = cv2.bitwise_and(frame,frame, mask= mask)
     #thresh = cv2.adaptiveThreshold(frame,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV,11,2)
