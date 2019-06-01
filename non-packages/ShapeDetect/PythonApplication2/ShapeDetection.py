@@ -17,12 +17,12 @@ s2 = s3 = s4 = s5 = 0
 IP_ADDRESS = "rtsp://root:jhsrobo@192.168.1.201/axis-media/media.amp"
 
 # load the image/video
-#cap = cv2.VideoCapture(IP_ADDRESS)
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(IP_ADDRESS)
+#cap = cv2.VideoCapture(0)
 while True:
 	# Capture frame-by-frame
 	ret, frame = cap.read()
-	cv2.rectangle(frame, (50, 110), (330, 390), (255, 255, 255), 3)
+	cv2.rectangle(frame, (110, 400), (510, 100), (255, 255, 255), 3)
 	cv2.imshow('frame', frame)
 	k = cv2.waitKey(33)
 	if k==97:
@@ -37,9 +37,9 @@ while True:
 		continue
 # crop image to fit frame and resize it for better processing!
 y = 110
-x = 50
-h = 280
-w = 280
+x = 120
+h = 285
+w = 380
 crop = frame[y:y+h, x:x+w]
 cv2.imwrite('frame.png', crop)
 image = cv2.imread("frame.png")
@@ -52,7 +52,7 @@ gray = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
 blurred = cv2.GaussianBlur(gray, (5, 5), 0)
 ##generic thresholhing
 if mode == 2:
-	ret, thresh = cv2.threshold(blurred, 60, 255, cv2.THRESH_BINARY_INV)
+	ret, thresh = cv2.threshold(blurred, 100, 255, cv2.THRESH_BINARY_INV)
 ##adaptive threshholding
 if mode == 1:
 	thresh = cv2.adaptiveThreshold(blurred ,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV,13,5)
@@ -73,6 +73,10 @@ for c in cnts:
 	cY = int((M["m01"] / (M["m00"] + 1e-7)) * ratio)
 	shape = sd.detect(c)
 	x,y,w,h = cv2.boundingRect(c)
+	if w>30 and h>30:
+		idx+=1
+		new_img=image[y:y+h,x:x+w]
+		cv2.imshow(str(idx) + '.png', new_img)
 	# multiply the contour (x, y)-coordinates by the resize ratio,
 	# then draw the contours and the name of the shape on the image
 	c = c.astype("float")
@@ -86,3 +90,4 @@ for c in cnts:
 cv2.imshow("Image", image)
 
 cv2.waitKey(0)
+

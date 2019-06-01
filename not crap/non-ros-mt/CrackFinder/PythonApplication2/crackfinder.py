@@ -12,7 +12,7 @@ import cv2
 import numpy as np
 import os
 import sys
-#IP_ADDRESS = "rtsp://root:jhsrobo@192.168.1.201/axis-media/media.amp"
+IP_ADDRESS = "rtsp://root:jhsrobo@192.168.1.201/axis-media/media.amp"
 #cap = cv2.VideoCapture(IP_ADDRESS)
 cap = cv2.VideoCapture(0)
 while True:
@@ -22,7 +22,7 @@ while True:
 	ratio = frame.shape[0] / float(resized.shape[0])
 	hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 	#blurred = cv2.GaussianBlur(hsv, (5, 5), 0)
-	lower_red = np.array([100,120,50])
+	lower_red = np.array([100,110,50])
 	upper_red = np.array([130,255,255])
 	k = cv2.waitKey(33)
 	if k==97:
@@ -44,6 +44,7 @@ while True:
 		cX = int((M["m10"] / (M["m00"] + 1e-7)) * ratio)
 		cY = int((M["m01"] / (M["m00"] + 1e-7)) * ratio)
 		shape = sd.detect(c)
+		print(shape)
 		x,y,w,h = cv2.boundingRect(c)
 		if w>1 and h>1:
 			idx+=1
@@ -61,12 +62,18 @@ while True:
 			blueval1 = np.size(new_img, 1)
 			bluesmallside = min(blueval0, blueval1)
 			bluephatsize = max(blueval0, blueval1)
-			quickmaffsSMALLO = bluesmallside / 1.75
-			quickmaffsLARGO = bluesmallside / 1.87
-			lengthsmallo = bluephatsize / quickmaffsSMALLO
+			#quickmaffsSMALLO = bluesmallside / 1.75
+			quickmaffsLARGO = bluesmallside / 1.85
+			#lengthsmallo = bluephatsize / quickmaffsSMALLO
 			lengthLARGO = bluephatsize / quickmaffsLARGO
-			print("if 1.8: ", lengthsmallo)
-			print("if 1.9: ", lengthLARGO)
+			#print("if 1.8: ", lengthsmallo)
+			#print("if 1.9: ", lengthLARGO)
+			#actuallength =(lengthLARGO * lengthsmallo)/2
+			print(lengthLARGO)
+			#j = "if 1.8: "
+			#i = str(lengthsmallo)
+			#m = j + i
+			#print(m)
 		if shape == "rectangle":
 			cv2.imwrite("is-it-a-rectange.png", mask)
 			sqtest = cv2.imread("is-it-a-rectange.png", 0)
@@ -74,8 +81,8 @@ while True:
 			x = 60
 			h = 485
 			w = 480
-			#crop = sqtest[y:y+h, x:x+w]
-			thresh = cv2.adaptiveThreshold(sqtest,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV,13,2)
+			crop = sqtest[y:y+h, x:x+w]
+			thresh = cv2.adaptiveThreshold(crop,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV,13,2)
 			cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 			cnts = cnts[0] if imutils.is_cv2() else cnts[1]
 			#print(cnts)
@@ -97,12 +104,12 @@ while True:
 					blueval1 = np.size(new_img, 1)
 					bluesmallside = min(blueval0, blueval1)
 					bluephatsize = max(blueval0, blueval1)
-					quickmaffsSMALLO = bluesmallside / 1.8
-					quickmaffsLARGO = bluesmallside / 1.9
-					lengthsmallo = bluephatsize / quickmaffsSMALLO
+					#quickmaffsSMALLO = bluesmallside / 1.8
+					quickmaffsLARGO = bluesmallside / 1.85
+					#lengthsmallo = bluephatsize / quickmaffsSMALLO
 					lengthLARGO = bluephatsize / quickmaffsLARGO
-					print("if 1.8: ", lengthsmallo)
-					print("if 1.9: ", lengthLARGO)
+					#print("if 1.8: ", lengthsmallo)
+					#print("len: ", lengthLARGO)
 					#cv2.imwrite("foundthecrack.png", frame)
 					#image4 = frame
 
