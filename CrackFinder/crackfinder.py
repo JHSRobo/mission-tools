@@ -106,7 +106,7 @@ while True:
 					c = c.astype("int")
 					cv2.imshow('thresh',thresh)
 					cv2.imwrite("foundthecrack.png", frame)
-					blueval0 = np.size(new_img, 0)
+					blueval0 = np.size(new_img, 0) 
 					blueval1 = np.size(new_img, 1)
 					bluesmallside = min(blueval0, blueval1)
 					bluephatsize = max(blueval0, blueval1)
