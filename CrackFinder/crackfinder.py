@@ -114,11 +114,10 @@ while True:
 					quickmaffsLARGO = bluesmallside / 1.85
 					#lengthsmallo = bluephatsize / quickmaffsSMALLO
 					lengthLARGO = bluephatsize / quickmaffsLARGO
-					if lengthLARGO  > 7.5:
-						#print(lengthLARGO)
-						rounded = round(lengthLARGO, 2)
-						stringified = str(rounded)
-						cv2.putText(frame, stringified, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255), 2)
+					#print(lengthLARGO)
+					rounded = round(lengthLARGO, 1)
+					stringified = str(rounded) +"cm"
+					cv2.putText(frame, stringified, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255), 2)
 			# multiply the contour (x, y)-coordinates by the resigratio
 			# then draw the contours and the name of the shape on the image
 			c = c.astype("float")
