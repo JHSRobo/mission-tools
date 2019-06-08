@@ -32,8 +32,8 @@ def crop_minAreaRect(img, rect):
                        pts[1][0]:pts[2][0]]
 
     return img_crop
-#cap = cv2.VideoCapture(IP_ADDRESS)
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(IP_ADDRESS)
+#cap = cv2.VideoCapture(0)
 while True:
 	# Capture frame-by-frame
 	ret, frame = cap.read()
@@ -106,7 +106,7 @@ while True:
 					c = c.astype("int")
 					cv2.imshow('thresh',thresh)
 					cv2.imwrite("foundthecrack.png", frame)
-					blueval0 = np.size(new_img, 0) 
+					blueval0 = np.size(new_img, 0)
 					blueval1 = np.size(new_img, 1)
 					bluesmallside = min(blueval0, blueval1)
 					bluephatsize = max(blueval0, blueval1)
