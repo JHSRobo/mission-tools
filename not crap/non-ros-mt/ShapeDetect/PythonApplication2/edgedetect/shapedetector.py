@@ -37,7 +37,7 @@ class ShapeDetector:
 				self.s3 = self.s3 + 1
 			else:
 				shape = "rectangle"
-				self.s4 = self.s4 + 1
+				self.s4 = self.s4 + 1 
 
 		# if the shape is a pentagon, it will have 5 vertices
 		# elif len(approx) == 5:
