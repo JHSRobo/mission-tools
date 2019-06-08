@@ -17,8 +17,8 @@ s2 = s3 = s4 = s5 = 0
 IP_ADDRESS = "rtsp://root:jhsrobo@192.168.1.201/axis-media/media.amp"
 
 # load the image/video
-cap = cv2.VideoCapture(IP_ADDRESS)
-#cap = cv2.VideoCapture(0)
+#cap = cv2.VideoCapture(IP_ADDRESS)
+cap = cv2.VideoCapture(0)
 while True:
 	# Capture frame-by-frame
 	ret, frame = cap.read()

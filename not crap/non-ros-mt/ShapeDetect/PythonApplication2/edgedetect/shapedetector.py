@@ -58,9 +58,9 @@ class ShapeDetector:
 		blackdrop = np.zeros((512, 512, 3), np.uint8)
 		font = cv2.FONT_HERSHEY_SIMPLEX
 		#displays number of triangles
-		cv2.putText(blackdrop,c2,(10,120), font, 4,(255,255,255),2,cv2.LINE_AA)
+		cv2.putText(blackdrop,c2,(10,120), font, 4,(0,0,255),2,cv2.LINE_AA)
 		#displays number of Squares
-		cv2.putText(blackdrop,c3,(10,230), font, 4,(255,255,255),2,cv2.LINE_AA)
+		cv2.putText(blackdrop,c3,(10,230), font, 4,(0,0,255),2,cv2.LINE_AA)
 		p1 = (166, 40)
 		p2 = (130, 120)
 		p3 = (200, 120)
@@ -69,9 +69,9 @@ class ShapeDetector:
 		cv2.line(blackdrop, p2, p3, (0, 0, 255), 3)
 		cv2.line(blackdrop, p1, p3, (0, 0, 255), 3)
 		cv2.rectangle(blackdrop,(125,155),(195,225),(0,0,255),3)
-		cv2.putText(blackdrop,c4,(10,340), font, 4,(255,255,255),2,cv2.LINE_AA)
+		cv2.putText(blackdrop,c4,(10,340), font, 4,(0,0,255),2,cv2.LINE_AA)
 		cv2.rectangle(blackdrop,(155,265),(165,335),(0,0,255),3)
-		cv2.putText(blackdrop,c5,(10,450), font, 4,(255,255,255),2,cv2.LINE_AA)
+		cv2.putText(blackdrop,c5,(10,450), font, 4,(0,0,255),2,cv2.LINE_AA)
 		cv2.circle(blackdrop,(160,410), 40, (0,0,255), 3)
 		cv2.imshow("blackdrop", blackdrop)
 		return shape
