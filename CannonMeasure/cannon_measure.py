@@ -23,84 +23,124 @@ def click_and_crop(event, x, y, flags, param):
 
 def get_measurement(cv_image):
     global clicked, mouse_pos
+    mouse_pos = []
     cv2.imshow('frame', cv_image)
     cv2.setMouseCallback('frame', click_and_crop)
     clicked = False
     while not clicked:
-        print("click")
         k = cv2.waitKey(10)
-    cv2.imshow('frame', cv_image)
-    cv2.setMouseCallback('frame', click_and_crop)
     clicked = False
     while not clicked:
-        print("click")
         k = cv2.waitKey(10)
-    return sqrt(sqr(mouse_pos[0] - mouse_pos[2]) + sqr(mouse_pos[1] - mouse_pos[3]))
+    cv2.line(cv_image, (mouse_pos[0], mouse_pos[1]), (mouse_pos[2], mouse_pos[3]), (0, 255, 0), 3)
+    cv2.imshow('frame', cv_image)
+    return sqrt(sqr(mouse_pos[0] - mouse_pos[2]) + sqr(mouse_pos[1] - mouse_pos[3])), cv_image
 
 
 def measure():
     global clicked
     refrence = 15.06
-    IP_ADDRESS = "rtsp://root:jhsrobo@192.168.1.201/axis-media/media.amp"
+    #IP_ADDRESS = "rtsp://root:jhsrobo@192.168.1.201/axis-media/media.amp"
+    IP_ADDRESS = 0
+    done = False
 
-    # load the image/video
-    # cap = cv2.VideoCapture(IP_ADDRESS)
-    cap = cv2.VideoCapture(IP_ADDRESS)
-    ret, cv_image = cap.read()
-    # get pixel ratio
-    length = get_measurement(cv_image)
-    ratio = length / refrence
+    while not done:
+        # load the image/video
+        # cap = cv2.VideoCapture(IP_ADDRESS)
+        cap = cv2.VideoCapture(IP_ADDRESS)
+        ret, cv_image = cap.read()
+        # get pixel ratio
+        length, cv_image = get_measurement(cv_image)
+        ratio = length / refrence
 
-    # get irl distance
-    irl_length = get_measurement(cv_image)
-    cannon_height_tall = irl_length / ratio
-
-
-    # cannon height of small endcap
-    # WAIT FOR CLICK
-    clicked = False
-    while not clicked:
-        print("click")
-        k = cv2.waitKey(10)
+        # get irl distance
+        irl_length, cv_throwaway = get_measurement(cv_image)
+        cannon_height_tall = irl_length / ratio
 
 
-    cap = cv2.VideoCapture(IP_ADDRESS)
-    ret, cv_image = cap.read()
+        # cannon height of small endcap
+        # WAIT FOR CLICK
+        clicked = False
+        print("Taken")
+        while not clicked:
+            k = cv2.waitKey()
+            if k == 97:
+                done = False
+                clicked = True
+            elif k == 13:
+                done = True
+                clicked = True
+                break
+            else:
+                print(k)
 
-    length = get_measurement(cv_image)
-    ratio = length / refrence
+    done = False
+    while not done:
+        cap = cv2.VideoCapture(IP_ADDRESS)
+        ret, cv_image = cap.read()
 
-    # get irl distance
-    length = get_measurement(cv_image)
-    cannon_height_short = length / ratio
+        length, cv_image = get_measurement(cv_image)
+        ratio = length / refrence
 
-    # height of bore
-    # wait for click
-    clicked = False
-    while not clicked:
-        print("click")
-        k = cv2.waitKey(10)
+        # get irl distance
+        length, cv_throwaway = get_measurement(cv_image)
+        cannon_height_short = length / ratio
 
-    cap = cv2.VideoCapture(IP_ADDRESS)
-    ret, cv_image = cap.read()
+        # height of bore
+        # wait for click
+        clicked = False
+        print("Taken")
+        while not clicked:
+            k = cv2.waitKey()
+            if k == 97:
+                done = False
+                clicked = True
+                break
+            elif k == 13:
+                done = True
+                clicked = True
+                break
+            else:
+                print(k)
 
-    length = get_measurement(cv_image)
-    ratio = length / refrence
+    done = False
+    while not done:
+        cap = cv2.VideoCapture(IP_ADDRESS)
+        ret, cv_image = cap.read()
 
-    # get irl distance
-    length = get_measurement(cv_image)
-    cannon_bore = length / ratio
+        length = get_measurement(cv_image)
+        ratio = length / refrence
+
+        # get irl distance
+        length = get_measurement(cv_image)
+        cannon_bore = length / ratio
 
 
-    # cannon length
-    cap = cv2.VideoCapture(IP_ADDRESS)
-    ret, cv_image = cap.read()
+        # cannon length
+        cap = cv2.VideoCapture(IP_ADDRESS)
+        ret, cv_image = cap.read()
 
-    length = get_measurement(cv_image)
-    ratio = length / cannon_height_tall
+        length = get_measurement(cv_image)
+        ratio = length / cannon_height_tall
 
-    length = get_measurement(cv_image)
-    cannon_length = length / ratio
+        length = get_measurement(cv_image)
+        cannon_length = length / ratio
+
+        clicked = False
+        print("Taken")
+        while not clicked:
+           k = cv2.waitKey()
+           if k == 97:
+                done = False
+                clicked = True
+                break
+           elif k == 13:
+                done = True
+                clicked = True
+                break
+           else:
+               print(k)
+
 
     print("Cannon height of tall endcap = {0}\n".format(cannon_height_tall))
     print("Cannon height of short endcap = {0}\n".format(cannon_height_short))
