@@ -1,6 +1,6 @@
 from math import sqrt
 import cv2
-
+import sys
 
 def sqr(num):
     return num * num
@@ -9,28 +9,37 @@ def sqr(num):
 mouse_pos = []
 clicked = False
 
-
 def click_and_crop(event, x, y, flags, param):
     # grab references to the global variables
     # if the left mouse button was clicked, record the starting
     # (x, y) coordinates and indicate that cropping is being
     # performed
-    global refPt, clicked
+    global clicked, mouse_pos
     if event == cv2.EVENT_LBUTTONDOWN:
         clicked = True
-        mouse_pos.append(x, y)
-
+        mouse_pos.append(x)
+	mouse_pos.append(y)
+        print("{0},{1}".format(x,y))
 
 def get_measurement(cv_image):
-    global clicked, refP
-    cv2.rectangle(cv_image, (110, 400), (510, 100), (255, 255, 255), 3)
+    global clicked, mouse_pos
     cv2.imshow('frame', cv_image)
-
-    while mouse_pos.len < 4:
-        return sqrt(sqr(mouse_pos[0] - mouse_pos[2]) + sqr(mouse_pos[1] - mouse_pos[3]))
+    cv2.setMouseCallback('frame', click_and_crop)
+    clicked = False
+    while not clicked:
+        print("click")
+        k = cv2.waitKey(10)
+    cv2.imshow('frame', cv_image)
+    cv2.setMouseCallback('frame', click_and_crop)
+    clicked = False
+    while not clicked:
+        print("click")
+        k = cv2.waitKey(10)
+    return sqrt(sqr(mouse_pos[0] - mouse_pos[2]) + sqr(mouse_pos[1] - mouse_pos[3]))
 
 
 def measure():
+    global clicked
     refrence = 15.06
     IP_ADDRESS = "rtsp://root:jhsrobo@192.168.1.201/axis-media/media.amp"
 
@@ -43,14 +52,17 @@ def measure():
     ratio = length / refrence
 
     # get irl distance
-    length = get_measurement(cv_image)
-    cannon_height_tall = length / ratio
+    irl_length = get_measurement(cv_image)
+    cannon_height_tall = irl_length / ratio
+
 
     # cannon height of small endcap
     # WAIT FOR CLICK
     clicked = False
     while not clicked:
-        pass
+        print("click")
+        k = cv2.waitKey(10)
+
 
     cap = cv2.VideoCapture(IP_ADDRESS)
     ret, cv_image = cap.read()
@@ -63,9 +75,11 @@ def measure():
     cannon_height_short = length / ratio
 
     # height of bore
+    # wait for click
     clicked = False
-    while not clicked:  # wait for click
-        pass
+    while not clicked:
+        print("click")
+        k = cv2.waitKey(10)
 
     cap = cv2.VideoCapture(IP_ADDRESS)
     ret, cv_image = cap.read()
@@ -94,6 +108,7 @@ def measure():
     print("Cannon length = {0}\n".format(cannon_length))
 
 
+
 def volume():
     length = float(input("Length: "))
     r1 = float(input("Actual R1: "))
@@ -119,5 +134,7 @@ if __name__ == "__main__":
     try:
         measure()
         volume()
+    except KeyboardInterrupt:
+	sys.exit(1)
     except Exception as e:
         print(e)
