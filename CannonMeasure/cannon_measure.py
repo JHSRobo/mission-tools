@@ -40,8 +40,8 @@ def get_measurement(cv_image):
 def measure():
     global clicked
     refrence = 15.06
-    #IP_ADDRESS = "rtsp://root:jhsrobo@192.168.1.201/axis-media/media.amp"
-    IP_ADDRESS = 0
+    IP_ADDRESS = "rtsp://root:jhsrobo@192.168.1.201/axis-media/media.amp"
+    #IP_ADDRESS = 0
     done = False
 
     while not done:
@@ -70,7 +70,6 @@ def measure():
             elif k == 13:
                 done = True
                 clicked = True
-                break
             else:
                 print(k)
 
