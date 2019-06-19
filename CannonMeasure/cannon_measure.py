@@ -44,6 +44,20 @@ def measure():
     #IP_ADDRESS = 0
     done = False
 
+    cap = cv2.VideoCapture(IP_ADDRESS)
+    ret, cv_image = cap.read()
+    cv2.imshow("frame", cv_image)
+    clicked = False
+    while not clicked:
+        k = cv2.waitKey()
+        if k == 13:
+            clicked = True
+            break
+        else:
+            print(k)
+
+
+    done = False
     while not done:
         # load the image/video
         # cap = cv2.VideoCapture(IP_ADDRESS)
@@ -67,6 +81,7 @@ def measure():
             if k == 97:
                 done = False
                 clicked = True
+                break
             elif k == 13:
                 done = True
                 clicked = True
@@ -174,6 +189,6 @@ if __name__ == "__main__":
         measure()
         volume()
     except KeyboardInterrupt:
-	sys.exit(1)
+	    sys.exit(1)
     except Exception as e:
         print(e)
