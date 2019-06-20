@@ -41,7 +41,7 @@ while True:
 	ratio = frame.shape[0] / float(resized.shape[0])
 	hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 	#blurred = cv2.GaussianBlur(hsv, (5, 5), 0)
-	lower_red = np.array([100,110,50])
+	lower_red = np.array([100,120,140])
 	upper_red = np.array([130,255,255])
 	k = cv2.waitKey(33)
 	if k==97:
@@ -63,13 +63,13 @@ while True:
 		cX = int((M["m10"] / (M["m00"] + 1e-7)) * ratio)
 		cY = int((M["m01"] / (M["m00"] + 1e-7)) * ratio)
 		shape = sd.detect(c)
-		print(shape)
+		#print(shape)
 		x,y,w,h = cv2.boundingRect(c)
 		if w>1 and h>1:
 			idx+=1
 			new_img = frame[y:y+h,x:x+w]
-			cv2.imshow('croppo',new_img)
-			cv2.imwrite('croppo.png', new_img)
+			#cv2.imshow('croppo',new_img)
+			#cv2.imwrite('croppo.png', new_img)
 			M = cv2.moments(c)
 			cX = int((M["m10"] / (M["m00"] + 1e-7)) * ratio)
 			cY = int((M["m01"] / (M["m00"] + 1e-7)) * ratio)
@@ -79,8 +79,21 @@ while True:
 			cv2.drawContours(frame, [c], -1, (0, 0, 255), 2)
 			#rotcrop = crop_minAreaRect(frame, rect)
 			#cv2.imshow('croppo2', rotcrop)
+			blueval0 = np.size(new_img, 0)
+			blueval1 = np.size(new_img, 1)
+			bluesmallside = min(blueval0, blueval1)
+			bluephatsize = max(blueval0, blueval1)
+			#quickmaffsSMALLO = bluesmallside / 1.85 (IDEAL LEN)
+			quickmaffsLARGO = bluesmallside / 1.85
+			#lengthsmallo = bluephatsize / quickmaffsSMALLO
+			lengthLARGO = bluephatsize / quickmaffsLARGO
+			print(lengthLARGO)
+			rounded = round(lengthLARGO, 1)
+			stringified = str(rounded) +"cm"
+			cv2.putText(frame, stringified, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255), 2)
 
-		if shape == "rectangle":
+
+		"""if shape == "rectangle":
 			cv2.imwrite("is-it-a-rectange.png", mask)
 			sqtest = cv2.imread("is-it-a-rectange.png", 0)
 			y = 75
@@ -104,20 +117,9 @@ while True:
 					c = c.astype("float")
 					c *= ratio
 					c = c.astype("int")
-					cv2.imshow('thresh',thresh)
-					cv2.imwrite("foundthecrack.png", frame)
-					blueval0 = np.size(new_img, 0)
-					blueval1 = np.size(new_img, 1)
-					bluesmallside = min(blueval0, blueval1)
-					bluephatsize = max(blueval0, blueval1)
-					#quickmaffsSMALLO = bluesmallside / 1.85 (IDEAL LEN)
-					quickmaffsLARGO = bluesmallside / 1.85
-					#lengthsmallo = bluephatsize / quickmaffsSMALLO
-					lengthLARGO = bluephatsize / quickmaffsLARGO
-					#print(lengthLARGO)
-					rounded = round(lengthLARGO, 1)
-					stringified = str(rounded) +"cm"
-					cv2.putText(frame, stringified, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255), 2)
+					#cv2.imshow('thresh',thresh)
+					#cv2.imwrite("foundthecrack.png", frame)
+					
 			# multiply the contour (x, y)-coordinates by the resigratio
 			# then draw the contours and the name of the shape on the image
 			c = c.astype("float")
@@ -125,7 +127,7 @@ while True:
 			c = c.astype("int")
 			#cv2.drawContours(frame, [c], -1, (0, 255, 0), 2)
 			#cv2.putText(frame, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (100, 100, 100), 2)
-
+"""
 		# multiply the contour (x, y)-coordinates by the resize ratio,
 		# then draw the contours and the name of the shape on the image
 		c = c.astype("float")
@@ -136,7 +138,7 @@ while True:
 	#thresh = cv2.adaptiveThreshold(hsv ,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV,11,6)
 	#ret, thresh2 = cv2.threshold(ret, 60, 255, cv2.THRESH_BINARY_INV)
 	cv2.imshow('frame',frame)
-	cv2.imshow('mask',mask)
-	cv2.imshow('res',res)
+	#cv2.imshow('mask',mask)
+	#cv2.imshow('res',res)
 	#cv2.imshow('thresh',thresh)
 	#cv2.imshow('thresh2',thresh2)

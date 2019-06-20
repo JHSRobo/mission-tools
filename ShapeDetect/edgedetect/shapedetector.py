@@ -37,7 +37,7 @@ class ShapeDetector:
 				self.s3 = self.s3 + 1
 			else:
 				shape = "rectangle"
-				self.s4 = self.s4 + 1 
+				self.s4 = self.s4 + 1
 
 		# if the shape is a pentagon, it will have 5 vertices
 		# elif len(approx) == 5:
@@ -45,6 +45,14 @@ class ShapeDetector:
 
 		# otherwise, we assume the shape is a circle
 		else:
+			(x,y), radius = cv2.minEnclosingCircle(approx)
+			center = (int(x), int(y))
+			cv2.circle('thresh', center, int(radius), (0,255,255), 2)
+			perfect_circle = cv2.ellipse2poly(center, int(radius), 0, 0, 360, 5)
+			difference = cv2.matchShapes(approx, perfect_circle, 1, 0.0)
+			print(difference)
+			if difference < 0.1:
+				print('circle')
 			shape = "circle"
 			self.s5 += 1
 
