@@ -16,43 +16,35 @@ previous_values = np.zeros((100,))
 cap = cv2.VideoCapture(IP_ADDRESS)
 
 def dist_form(first, last):
+	# distance formula
 	return sqrt((first[0] - last[0])**2 + (first[1] - last[1])**2)
 
 while True:
 	# Capture frame-by-frame
 	ret, frame = cap.read()
-	resized = imutils.resize(frame, width=640)
-	ratio = frame.shape[0] / float(resized.shape[0])
-	hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-	lower_red = np.array([100,100,90])
+	hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)  # convert to HSV
+
+	lower_red = np.array([100,100,90])  #HSV upper and lower limits
 	upper_red = np.array([140,255,255])
 	k = cv2.waitKey(33)
 	if k==97:
 		#if you dare to touch the A key it will stop the program if it doesnt stop automatically
 		break
-	elif k==255:
-		continue
-	mask = cv2.inRange(hsv, lower_red, upper_red)
-	#cv2.imshow("mask", mask)
-	res = cv2.bitwise_and(frame,frame, mask= mask)
-	cnts = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+	mask = cv2.inRange(hsv, lower_red, upper_red)  # mask the image for the hsv colors
+	cnts = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)  # find the contours of the image
 	cnts = cnts[0] if imutils.is_cv2() else cnts[1]
 	for cnt in cnts:
-		if cv2.contourArea(cnt) > 2000:
-			rect = cv2.minAreaRect(cnt)
+		if cv2.contourArea(cnt) > 2000:  # check if the area is over 2000
+			rect = cv2.minAreaRect(cnt)  # make a rectangle around it
 			box = cv2.boxPoints(rect)
-			box = np.int0(box)
-			#print(box)
+			box = np.int0(box)  # get the int coords
 			height = dist_form(box[0], box[1])
 			length = dist_form(box[0], box[3])
-			width = min(height, length)
-			#print(width)
-			length = max(height, length)
-			#print(length)			
-			cv2.drawContours(frame, [box],0,(0,255,255),2)
-			ratio = RATIO / width
-			#print(ratio)
-			cm_length = length * ratio
+			width = min(height, length)  # find the shorter length (incase it is tilted)
+			length = max(height, length)  # find the longer length
+			cv2.drawContours(frame, [box],0,(0,255,255),2)  # draw the rectangle (for visuals)
+			ratio = RATIO / width  # cm per pixel
+			cm_length = length * ratio  # length in centimeters of crack
 			rounded = round(cm_length, 1)
 			print(rounded)
 			if rounded > 8 and rounded < 20:
