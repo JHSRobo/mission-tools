@@ -15,14 +15,18 @@ s2 = s3 = s4 = s5 = 0
 # in package shape_detect
 # https://github.com/JHSRobo/ROSBasic
 IP_ADDRESS = "rtsp://root:jhsrobo@192.168.1.201/axis-media/media.amp"
-
+#IP_ADDRESS = 0
 # load the image/video
 cap = cv2.VideoCapture(IP_ADDRESS)
 #cap = cv2.VideoCapture(0)
+y = 110
+x = 50
+h = 300
+w = 400
 while True:
 	# Capture frame-by-frame
 	ret, frame = cap.read()
-	cv2.rectangle(frame, (50, 110), (330, 390), (255, 255, 255), 3)
+	cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 255, 255), 3)
 	cv2.imshow('frame', frame)
 	k = cv2.waitKey(33)
 	if k==97:
@@ -36,10 +40,7 @@ while True:
 	elif k==255:
 		continue
 # crop image to fit frame and resize it for better processing!
-y = 110
-x = 50
-h = 280
-w = 280
+
 crop = frame[y:y+h, x:x+w]
 cv2.imwrite('frame.png', crop)
 image = cv2.imread("frame.png")
