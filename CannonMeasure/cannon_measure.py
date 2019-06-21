@@ -19,7 +19,7 @@ def click_and_crop(event, x, y, flags, param):
         clicked = True
         mouse_pos.append(x)
 	mouse_pos.append(y)
-        print("{0},{1}".format(x,y))
+        #print("{0},{1}".format(x,y))
 
 def get_measurement(cv_image):
     global clicked, mouse_pos
@@ -54,7 +54,8 @@ def measure():
             clicked = True
             break
         else:
-            print(k)
+            #print(k)
+            pass
 
 
     done = False
@@ -63,6 +64,7 @@ def measure():
         # cap = cv2.VideoCapture(IP_ADDRESS)
         cap = cv2.VideoCapture(IP_ADDRESS)
         ret, cv_image = cap.read()
+
         # get pixel ratio
         length, cv_image = get_measurement(cv_image)
         ratio = length / refrence
@@ -75,7 +77,7 @@ def measure():
         # cannon height of small endcap
         # WAIT FOR CLICK
         clicked = False
-        print("Taken")
+        #print("Taken")
         while not clicked:
             k = cv2.waitKey()
             if k == 97:
@@ -86,7 +88,10 @@ def measure():
                 done = True
                 clicked = True
             else:
-                print(k)
+                #print(k)
+                pass
+
+    print("R3 = {0}\n".format(cannon_height_tall / 2))
 
     done = False
     while not done:
@@ -103,7 +108,7 @@ def measure():
         # height of bore
         # wait for click
         clicked = False
-        print("Taken")
+        #print("Taken")
         while not clicked:
             k = cv2.waitKey()
             if k == 97:
@@ -115,33 +120,25 @@ def measure():
                 clicked = True
                 break
             else:
-                print(k)
+                #print(k)
+                pass
+
+    print("R1 = {0}\n".format(cannon_height_short / 2))
 
     done = False
     while not done:
         cap = cv2.VideoCapture(IP_ADDRESS)
         ret, cv_image = cap.read()
 
-        length = get_measurement(cv_image)
+        length, cv_image = get_measurement(cv_image)
         ratio = length / refrence
 
         # get irl distance
-        length = get_measurement(cv_image)
+        length, cv_throwaway = get_measurement(cv_image)
         cannon_bore = length / ratio
 
-
-        # cannon length
-        cap = cv2.VideoCapture(IP_ADDRESS)
-        ret, cv_image = cap.read()
-
-        length = get_measurement(cv_image)
-        ratio = length / cannon_height_tall
-
-        length = get_measurement(cv_image)
-        cannon_length = length / ratio
-
         clicked = False
-        print("Taken")
+        #print("Taken")
         while not clicked:
            k = cv2.waitKey()
            if k == 97:
@@ -153,13 +150,42 @@ def measure():
                 clicked = True
                 break
            else:
-               print(k)
+               #print(k)
+               pass
+
+    print("R3 = {0}\n".format(cannon_bore / 2))
+
+    done = False
+    while not done:
+        # cannon length
+        cap = cv2.VideoCapture(IP_ADDRESS)
+        ret, cv_image = cap.read()
+        cv2.imshow('frame', cv_image)
+
+        length, cv_image = get_measurement(cv_image)
+        ratio = length / cannon_height_tall
+
+        length, cv_throwaway = get_measurement(cv_image)
+        cannon_length = length / ratio
+
+        clicked = False
+        #print("Taken")
+        while not clicked:
+           k = cv2.waitKey()
+           if k == 97:
+                done = False
+                clicked = True
+                break
+           elif k == 13:
+                done = True
+                clicked = True
+                break
+           else:
+               #print(k)
+               pass
 
 
-    print("Cannon height of tall endcap = {0}\n".format(cannon_height_tall))
-    print("Cannon height of short endcap = {0}\n".format(cannon_height_short))
-    print("Cannon bore height = {0}\n".format(cannon_bore))
-    print("Cannon length = {0}\n".format(cannon_length))
+    print("L = {0}\n".format(cannon_length))
 
 
 
