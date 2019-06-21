@@ -1,7 +1,11 @@
 # import the necessary packages
 import cv2
 import numpy as np
+from math import sqrt
 
+def dist_form(first, last):
+	# distance formula
+	return sqrt((first[0] - last[0])**2 + (first[1] - last[1])**2)
 
 class ShapeDetector:
 	def __init__(self):
@@ -10,10 +14,10 @@ class ShapeDetector:
 
 	def detect(self, c):
 		# initialize the shape name and approximate the contour
-		shape = "unidentified"
+		shape = ""
 		peri = cv2.arcLength(c, True)
 		approx = cv2.approxPolyDP(c, 0.035 * peri, True)
-		print(cv2.contourArea(approx))
+		#print(cv2.contourArea(approx))
 		if not cv2.contourArea(approx) < 1500 and not cv2.contourArea(approx) > 10000:
 			# if the shape is a triangle, it will have 3 vertices
 			# if len(approx) == 2:
@@ -29,36 +33,30 @@ class ShapeDetector:
 				# compute the bounding box of the contour and use the
 				# bounding box to compute the aspect ratio
 				(x, y, w, h) = cv2.boundingRect(approx)
-				ar = w / float(h)
-
-				# a square will have an aspect ratio that is approximately
-				# equal to one, otherwise, the shape is a rectangle
-				if 0.75 <= ar <= 1.35:
+				rect = cv2.minAreaRect(c)  # make a rectangle around it
+				box = cv2.boxPoints(rect)
+				box = np.int0(box)  # get the int coords
+				height = dist_form(box[0], box[1])
+				length = dist_form(box[0], box[3])
+				if 0.5 < min(length, height) / max(length, height) < 1.5:
 					shape = "square"
-					self.s3 = self.s3 + 1
-				else:
+					self.s3 += 1
+				elif 2.5 < max(length, height) / min(length, height) < 3.5:
 					shape = "rectangle"
-					self.s4 = self.s4 + 1
+					self.s4 += 1
 
-			# if the shape is a pentagon, it will have 5 vertices
-			# elif len(approx) == 5:
-				# shape = "pentagon"
-
-			# otherwise, we assume the shape is a circle
 			else:
 				(x,y), radius = cv2.minEnclosingCircle(approx)
 				center = (int(x), int(y))
 				#cv2.circle('thresh', center, int(radius), (0,255,255), 2)
 				perfect_circle = cv2.ellipse2Poly(center, (int(radius), int(radius)), 0, 0, 360, 5)
 				difference = cv2.matchShapes(approx, perfect_circle, 1, 0.0)
-				print(difference)
+				#print(difference)
 				if difference < 0.03:
 					shape = "circle"
 					self.s5 += 1
 
 
-		#print(self.s1, "lines,", self.s2, "triangles,", self.s3, "Squares,", self.s4, "rectangles,", self.s5, "circles")
-		# return the name of the shape
 		c2 = str(self.s2)
 		c3 = str(self.s3)
 		c4 = str(self.s4)

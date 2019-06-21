@@ -19,14 +19,10 @@ IP_ADDRESS = "rtsp://root:jhsrobo@192.168.1.201/axis-media/media.amp"
 # load the image/video
 cap = cv2.VideoCapture(IP_ADDRESS)
 #cap = cv2.VideoCapture(0)
-y = 110
-x = 50
-h = 300
-w = 400
+
 while True:
 	# Capture frame-by-frame
 	ret, frame = cap.read()
-	cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 255, 255), 3)
 	cv2.imshow('frame', frame)
 	k = cv2.waitKey(33)
 	if k==97:
@@ -41,15 +37,10 @@ while True:
 		continue
 # crop image to fit frame and resize it for better processing!
 
-crop = frame[y:y+h, x:x+w]
-cv2.imwrite('frame.png', crop)
-image = cv2.imread("frame.png")
-resized = imutils.resize(image, width=380)
-ratio = image.shape[0] / float(resized.shape[0])
 
 # convert the resized image to grayscale, blur it slightly,
 # and threshold it
-gray = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
+gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 blurred = cv2.GaussianBlur(gray, (5, 5), 0)
 ##generic thresholhing
 if mode == 2:
@@ -70,20 +61,19 @@ for c in cnts:
 	# compute the center of the contour, then detect the name of the
 	# shape using only the contour
 	M = cv2.moments(c)
-	cX = int((M["m10"] / (M["m00"] + 1e-7)) * ratio)
-	cY = int((M["m01"] / (M["m00"] + 1e-7)) * ratio)
+	cX = int(M["m10"] / (M["m00"] + 1e-7))
+	cY = int(M["m01"] / (M["m00"] + 1e-7))
 	shape = sd.detect(c)
 	x,y,w,h = cv2.boundingRect(c)
 	# multiply the contour (x, y)-coordinates by the resize ratio,
 	# then draw the contours and the name of the shape on the image
-	c = c.astype("float")
-	c *= ratio
 	c = c.astype("int")
-	cv2.drawContours(image, [c], -1, (0, 255, 0), 2)
-	cv2.putText(image, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (100, 100, 100), 2)
+	if shape != "":
+		cv2.drawContours(frame, [c], -1, (0, 255, 0), 2)
+        	cv2.putText(frame, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (100, 100, 100), 2)
 	#converts ints to strings
 
 	# show the output image
-cv2.imshow("Image", image)
+cv2.imshow("Image", frame)
 
 cv2.waitKey(0)
